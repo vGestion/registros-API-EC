@@ -24,6 +24,7 @@ export class AddFieldMC extends AddField{
 export class AddFieldText extends AddField{
     @Prop()
     max_long: number;
+    @Prop()
     min_long: number;
 }
 
@@ -32,8 +33,10 @@ export class AddFieldText extends AddField{
 export class AddFieldNumber extends AddField{
     @Prop()
     max: number;
+    @Prop()
     min: number;
     //El tipo se refiere a entero, natural, decimal, etc ... 
+    @Prop()
     type: string;
 }
 

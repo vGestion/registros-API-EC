@@ -1,26 +1,36 @@
 import { Injectable } from '@nestjs/common';
 import { CreateAddFieldDto } from './dto/create-add_field.dto';
 import { UpdateAddFieldDto } from './dto/update-add_field.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { AddField, AddFieldDocument } from './schema/add_field.schema';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class AddFieldsService {
-  create(createAddFieldDto: CreateAddFieldDto) {
-    return 'This action adds a new addField';
+
+  constructor( 
+    @InjectModel(AddField.name) private readonly AddFieldModel: Model<AddFieldDocument>, 
+  ) {}
+
+  create(createAddFieldDto: CreateAddFieldDto): Promise<AddField> {
+    return this.AddFieldModel.create(createAddFieldDto);
   }
 
-  findAll() {
-    return `This action returns all addFields`;
+  findAll() :Promise<AddField[]>{
+    return this.AddFieldModel.find().exec();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} addField`;
+  findOne(id: number):Promise<AddField> {
+    return this.AddFieldModel.findOne({ _id: id }).exec(); 
   }
 
-  update(id: number, updateAddFieldDto: UpdateAddFieldDto) {
-    return `This action updates a #${id} addField`;
+  update(id: number, updateAddFieldDto: UpdateAddFieldDto):Promise<AddField> {
+    return this.AddFieldModel.findOneAndUpdate({ _id: id }, updateAddFieldDto, { 
+      new: true, 
+    });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} addField`;
+    return this.AddFieldModel.findByIdAndRemove({ _id: id }).exec();
   }
 }

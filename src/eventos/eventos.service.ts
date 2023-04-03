@@ -1,26 +1,39 @@
 import { Injectable } from '@nestjs/common';
 import { CreateEventoDto } from './dto/create-evento.dto';
 import { UpdateEventoDto } from './dto/update-evento.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Evento, EventoDocument } from './schema/evento.schema';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class EventosService {
-  create(createEventoDto: CreateEventoDto) {
-    return 'This action adds a new evento';
+
+  constructor( 
+    @InjectModel(Evento.name) private readonly EventoModel: Model<EventoDocument>, 
+  ) {}
+
+  async create(createEventoDto: CreateEventoDto):Promise<Evento> {
+    return this.EventoModel.create(createEventoDto);
   }
 
-  findAll() {
-    return `This action returns all eventos`;
+  async findAll(propiedad: string, orden :number):Promise<Evento[]> {
+    
+    const ordenar = {};
+    ordenar[propiedad] = orden;
+
+    return this.EventoModel.find().sort(ordenar).exec();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} evento`;
+  async findOne(id: string):Promise<Evento> {
+    return this.EventoModel.findOne({ _id: id }).exec(); 
   }
 
-  update(id: number, updateEventoDto: UpdateEventoDto) {
-    return `This action updates a #${id} evento`;
+  async update(id: string, updateEventoDto: UpdateEventoDto):Promise<Evento> {
+    return this.EventoModel.findOneAndUpdate( updateEventoDto);
+    
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} evento`;
+  async remove(id: string) {
+    return this.EventoModel.findByIdAndRemove({ _id: id }).exec();
   }
 }

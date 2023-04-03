@@ -7,18 +7,33 @@ export class CreateAddFieldDto {
   @ApiProperty()
   description: string;
 
+}
+
+export class AddFieldMC extends CreateAddFieldDto{
   @ApiProperty()
-  start: Date;
+  opciones: string[]
+}
+
+export class AddFieldText extends CreateAddFieldDto{
+  @ApiProperty()
+  max_long: number;
 
   @ApiProperty()
-  end: Date;
+  min_long: number;
+}
+
+export class AddFieldNumber extends CreateAddFieldDto{
+  @ApiProperty()
+  max: number;
 
   @ApiProperty()
-  approval: Boolean;
+  min: number;
 
   @ApiProperty()
-  survey: string;
+  type: string;
+}
 
+export class AddFieldUploadF extends CreateAddFieldDto{
   @ApiProperty()
-  additional_fields: []
+  path:String;
 }
