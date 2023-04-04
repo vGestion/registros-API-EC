@@ -31,4 +31,5 @@ export class AddFieldsController {
   remove(@Param('id') id: string) {
     return this.addFieldsService.remove(+id);
   }
+  
 }

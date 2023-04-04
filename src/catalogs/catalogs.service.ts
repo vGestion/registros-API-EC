@@ -12,23 +12,41 @@ export class CatalogsService {
     @InjectModel(Catalog.name) private readonly CatalogModel: Model<CatalogDocument>, 
   ) {}
 
-  create(createCatalogDto: CreateCatalogDto): Promise<Catalog> {
+  async create(createCatalogDto: CreateCatalogDto): Promise<Catalog> {
     return this.CatalogModel.create(createCatalogDto);
   }
 
-  findAll():Promise<Catalog[]> {
+  async findAll():Promise<Catalog[]> {
     return this.CatalogModel.find().exec();
   }
 
-  findOne(id: string):Promise<Catalog> {
+  async findOne(id: string):Promise<Catalog> {
     return this.CatalogModel.findOne({ _id: id }).exec();
   }
 
-  update(id: string, updateCatalogDto: UpdateCatalogDto):Promise<Catalog> {
+  async update(id: string, updateCatalogDto: UpdateCatalogDto):Promise<Catalog> {
     return this.CatalogModel.findByIdAndUpdate(updateCatalogDto).exec();
   }
 
-  remove(id: string) {
+  async remove(id: string) {
     return this.CatalogModel.findByIdAndRemove({ _id: id }).exec();
+  }
+
+  async addOption(option:string, catalog:string):Promise<Catalog>{
+    this.CatalogModel.findOneAndUpdate(
+      { category: catalog},
+      { $push: {options:option}},
+      { new: true }
+    ).exec();
+    return this.CatalogModel.findOne({ category: catalog });
+  }
+
+  async deleteOption(option:string, catalog:string):Promise<Catalog>{
+    this.CatalogModel.findOneAndUpdate(
+      { category: catalog},
+      { $pull: {options:option}},
+      { new: true }
+    ).exec();
+    return this.CatalogModel.findOne({ category: catalog });
   }
 }

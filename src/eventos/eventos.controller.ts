@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestj
 import { EventosService } from './eventos.service';
 import { CreateEventoDto } from './dto/create-evento.dto';
 import { UpdateEventoDto } from './dto/update-evento.dto';
-import { CreateAddFieldDto } from 'src/add_fields/dto/create-add_field.dto';
+import { AddField } from 'src/add_fields/schema/add_field.schema';
 
 @Controller('eventos')
 export class EventosController {
@@ -13,7 +13,7 @@ export class EventosController {
     return this.eventosService.create(createEventoDto);
   }
 
-  /* Método para obtener todos los eventos ordenados donde 
+  /* Función para obtener todos los eventos ordenados donde 
      propiedad: nombre del campo json en base al cual se desea ordenar
      orden: 1 si es ascendente, -1 si es descendente
   */
@@ -36,5 +36,15 @@ export class EventosController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.eventosService.remove(id);
+  }
+
+  @Post('/addField/:id')
+  addOneField(@Param('id') id: string, @Body() addField: AddField){
+    return this.eventosService.addAditionalField(id,addField);
+  }
+
+  @Delete('/deleteField/:id')
+  deleteOneField(@Query('campo') campo: string,@Param('id') id: string){
+    return this.eventosService.deleteAditionalField(id,campo);
   }
 }

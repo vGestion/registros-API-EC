@@ -4,6 +4,7 @@ import { UpdateEventoDto } from './dto/update-evento.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Evento, EventoDocument } from './schema/evento.schema';
 import { Model } from 'mongoose';
+import { AddField } from 'src/add_fields/schema/add_field.schema';
 
 @Injectable()
 export class EventosService {
@@ -29,11 +30,28 @@ export class EventosService {
   }
 
   async update(id: string, updateEventoDto: UpdateEventoDto):Promise<Evento> {
-    return this.EventoModel.findOneAndUpdate( updateEventoDto);
+    return this.EventoModel.findOneAndUpdate(updateEventoDto).exec();
     
   }
 
   async remove(id: string) {
     return this.EventoModel.findByIdAndRemove({ _id: id }).exec();
+  }
+
+
+  async addAditionalField(id: string, addField: AddField):Promise<Evento>{
+    return this.EventoModel.findOneAndUpdate(
+      { _id: id},
+      { $push: {additional_fields:addField}},
+      { new: true }
+    ).exec();
+  }
+
+  async deleteAditionalField(id: string, campo: string):Promise<Evento>{
+    return this.EventoModel.findOneAndUpdate(
+      { _id: id},
+      { $pull: {additional_fields:{af_name: campo}}},
+      { new: true }
+    ).exec();
   }
 }
