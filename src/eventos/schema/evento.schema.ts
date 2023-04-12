@@ -1,6 +1,7 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose'; 
 import { AddField } from 'src/add_fields/schema/add_field.schema';
+import { User } from 'src/user/schema/user.schema';
 
 export type EventoDocument = Evento & Document; 
 
@@ -35,6 +36,9 @@ export class Evento {
 
   @Prop()
   additional_fields: [AddField]
+
+  @Prop()
+  users: [User]
 }
 
 export const EventoSchema = SchemaFactory.createForClass(Evento); 
