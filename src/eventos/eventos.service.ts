@@ -89,7 +89,7 @@ export class EventosService {
 
 
 getQR(id: string, idUser: string, newStatus: string):Readable{
-  const url =  "http://localhost:3001/eventos/updateUserStatus/"+id+"?idUser="+idUser+"&status="+newStatus; 
+  const url =  "https://api-vgestion.cloud.okteto.net/eventos/updateUserStatus/"+id+"?idUser="+idUser+"&status="+newStatus; 
   const qr_png = qr.image(url,{type:'png',margin:2})
   return qr_png;
 }
