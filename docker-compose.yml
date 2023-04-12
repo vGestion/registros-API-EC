@@ -8,7 +8,7 @@ services:
       - 27017:27017
 
   api: 
-    image: registros-backend
+    image: visualizacionesdatalat/registros-backend
     ports:
       - 3001:3001
     command: npm run start
