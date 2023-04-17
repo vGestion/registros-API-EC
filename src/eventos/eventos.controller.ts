@@ -67,5 +67,9 @@ export class EventosController {
     qr_png.pipe(res)
   }
 
+  @Post('/isRegistered')
+  isRegistered(@Body() user: {id:string, idUser:string}){
+    return this.eventosService.isRegistered(user.id,user.idUser);
+  }
   
 }

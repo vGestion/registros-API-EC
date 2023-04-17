@@ -5,10 +5,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Evento, EventoDocument } from './schema/evento.schema';
 import { Model } from 'mongoose';
 import { AddField } from 'src/add_fields/schema/add_field.schema';
-import { User } from 'src/user/schema/user.schema';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import * as qr from 'qr-image';
-import { Response } from 'express';
 import { Readable } from 'stream';
 
 @Injectable()
@@ -83,15 +81,30 @@ export class EventosService {
         "users.id_user": idUser
       },
       { $set: { "users.$.status": newStatus } },
-      {new: true}
+      { new: true }
     ).exec();
   }
 
 
-getQR(id: string, idUser: string, newStatus: string):Readable{
-  const url =  "https://api-vgestion.cloud.okteto.net/eventos/updateUserStatus/"+id+"?idUser="+idUser+"&status="+newStatus; 
-  const qr_png = qr.image(url,{type:'png',margin:2})
-  return qr_png;
-}
+  getQR(id: string, idUser: string, newStatus: string): Readable {
+    const url = "http://192.168.100.93:3001/eventos/updateUserStatus/" + id + "?idUser=" + idUser + "&status=" + newStatus;
+    const qr_png = qr.image(url, { type: 'png', margin: 2 })
+    return qr_png;
+  }
 
+  async isRegistered(id: string, idUser: string): Promise<Boolean> {
+    var usuario = await this.EventoModel.findOne(
+      {
+        _id: id,
+        users: { $elemMatch: { id_user: idUser } }
+      },
+    ).exec();
+
+    if(usuario){
+      return true;
+    }else{
+      return false;
+    }
+
+  }
 }
