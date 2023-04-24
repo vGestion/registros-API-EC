@@ -8,6 +8,8 @@ import { AddField } from 'src/add_fields/schema/add_field.schema';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import * as qr from 'qr-image';
 import { Readable } from 'stream';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 @Injectable()
 export class EventosService {
@@ -87,7 +89,7 @@ export class EventosService {
 
 
   getQR(id: string, idUser: string, newStatus: string): Readable {
-    const url = "http://192.168.100.93:3001/eventos/updateUserStatus/" + id + "?idUser=" + idUser + "&status=" + newStatus;
+    const url = process.env.PATH+"/eventos/updateUserStatus/" + id + "?idUser=" + idUser + "&status=" + newStatus;
     const qr_png = qr.image(url, { type: 'png', margin: 2 })
     return qr_png;
   }
