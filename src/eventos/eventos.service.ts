@@ -3,7 +3,7 @@ import { CreateEventoDto } from './dto/create-evento.dto';
 import { UpdateEventoDto } from './dto/update-evento.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Evento, EventoDocument } from './schema/evento.schema';
-import { Model } from 'mongoose';
+import { Model, ObjectId } from 'mongoose';
 import { AddField } from 'src/add_fields/schema/add_field.schema';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import * as qr from 'qr-image';
@@ -36,13 +36,11 @@ export class EventosService {
 
   async update(id: string, updateEventoDto: UpdateEventoDto): Promise<Evento> {
     return this.EventoModel.findOneAndUpdate(updateEventoDto).exec();
-
   }
 
   async remove(id: string) {
     return this.EventoModel.findByIdAndRemove({ _id: id }).exec();
   }
-
 
   async addAditionalField(id: string, addField: AddField): Promise<Evento> {
     return this.EventoModel.findOneAndUpdate(
@@ -87,9 +85,8 @@ export class EventosService {
     ).exec();
   }
 
-
   getQR(id: string, idUser: string, newStatus: string): Readable {
-    const url = process.env.PATH+"/eventos/updateUserStatus/" + id + "?idUser=" + idUser + "&status=" + newStatus;
+    const url = process.env.STATIC_ROUTE + "/eventos/updateUserStatus/" + id + "?idUser=" + idUser + "&status=" + newStatus;
     const qr_png = qr.image(url, { type: 'png', margin: 2 })
     return qr_png;
   }
@@ -102,11 +99,48 @@ export class EventosService {
       },
     ).exec();
 
-    if(usuario){
+    if (usuario) {
       return true;
-    }else{
+    } else {
       return false;
     }
 
+  }
+
+  async countState(state: string, id: string): Promise<Number> {
+
+    /* var res = await this.EventoModel.aggregate([{
+       $project: {
+         _id: '$_id',
+         totalProjects: { $size: "$users" }
+       }
+     }]);
+     console.log(res);*/
+    var res = await this.EventoModel.aggregate([
+      {
+        $match: { _id: "642b455e254f3df40dbb19a2" }
+      }, {
+        $project: {
+          count: {
+            $size: {
+              $filter: {
+                input: "$users",
+                as: "user",
+                cond: { $eq: ["$$user.status", state] }
+              }
+            }
+          }
+        }
+      }
+    ]).exec();
+    console.log(res);
+
+    var resultado = await this.EventoModel.findOne(
+      {
+        _id: id,
+        "users.status": state
+      }
+    ).countDocuments().exec();
+    return resultado;
   }
 }

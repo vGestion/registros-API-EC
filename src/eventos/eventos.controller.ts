@@ -71,5 +71,9 @@ export class EventosController {
   isRegistered(@Body() user: {id:string, idUser:string}){
     return this.eventosService.isRegistered(user.id,user.idUser);
   }
-  
+
+  @Post('/countState')
+  countState(@Body() user: {state: string, id: string}){
+    return this.eventosService.countState(user.state,user.id);
+  }
 }
