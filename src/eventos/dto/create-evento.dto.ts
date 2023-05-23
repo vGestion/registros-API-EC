@@ -22,5 +22,8 @@ export class CreateEventoDto {
     survey: string;
 
     @ApiProperty()
+    image: string;
+
+    @ApiProperty()
     additional_fields: [AddField]
 }

@@ -23,7 +23,7 @@ export class Evento {
   category: string;
 
   @Prop()
-  image: string;
+  imagen: string;
 
   @Prop()
   modality: string;
