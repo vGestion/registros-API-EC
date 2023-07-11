@@ -16,6 +16,12 @@ export class CreateEventoDto {
     end: Date;
 
     @ApiProperty()
+    place: string;
+  
+    @ApiProperty()
+    time: string;
+
+    @ApiProperty()
     approval: Boolean;
 
     @ApiProperty()

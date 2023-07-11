@@ -20,6 +20,12 @@ export class Evento {
   end: Date;
 
   @Prop()
+  place: string;
+
+  @Prop()
+  time: string;
+
+  @Prop()
   category: string;
 
   @Prop()
